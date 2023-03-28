@@ -16,6 +16,11 @@ class FlashChat extends StatelessWidget {
         textTheme: const TextTheme(
           bodyText1: TextStyle(color: Colors.black54),
         ),
+        appBarTheme: const AppBarTheme(
+          color: Colors.white,
+          foregroundColor: Colors.lightBlue,
+          elevation: 0.0,
+        )
       ),
       routes: <String, Widget Function(BuildContext)> {
         WelcomeScreen.id: (context) => const WelcomeScreen(),
