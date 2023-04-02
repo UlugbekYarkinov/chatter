@@ -18,8 +18,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
     super.initState();
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
-      upperBound: 100.0,
+      duration: const Duration(seconds: 1),
+      upperBound: 60.0,
     );
     controller.forward();
     controller.addListener(() {
@@ -43,12 +43,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                 Hero(
                   tag: 'logo',
                   child: SizedBox(
-                    height: 60.0,
+                    height: controller.value,
                     child: Image.asset('images/logo.png'),
                   ),
                 ),
-                Text(
-                  '${controller.value.toInt()}%',
+                const Text(
+                  'Flash Chat',
                   style: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
