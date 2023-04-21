@@ -1,5 +1,7 @@
 import 'package:chatter/components/rounded_action_button.dart';
 import 'package:chatter/constants.dart';
+import 'package:chatter/screens/chat_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,6 +13,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _auth = FirebaseAuth.instance;
+  late String email;
+  late String password;
+  bool registrationError = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +47,9 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 48.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
               onChanged: (value) {
-                //Do something with the user input.
+                email = value;
               },
               decoration: inputTextFieldDecoration.copyWith(hintText: 'Enter your email'),
             ),
@@ -49,17 +57,40 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 8.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              obscureText: true,
               onChanged: (value) {
-                //Do something with the user input.
+                password = value;
               },
               decoration: inputTextFieldDecoration.copyWith(hintText: 'Enter your password'),
             ),
             const SizedBox(
-              height: 24.0,
+              height: 12.0,
+            ),
+            Text(
+              registrationError ? "Either email or password is badly formatted" : " ",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.red,
+              ),
+            ),
+            const SizedBox(
+              height: 12.0,
             ),
             RoundedActionButton(
               color: Colors.lightBlueAccent,
-              onPressed: (){},
+              onPressed: () async{
+                try {
+                  await _auth.signInWithEmailAndPassword(email: email, password: password);
+                  if(mounted) {
+                    Navigator.pushNamed(context, ChatScreen.id);
+                  }
+                } catch(e) {
+                  setState(() {
+                    registrationError = true;
+                  });
+                }
+              },
               label: 'Log In',
             ),
           ],
