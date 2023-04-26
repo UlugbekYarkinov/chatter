@@ -68,20 +68,25 @@ class _ChatScreenState extends State<ChatScreen> {
             StreamBuilder(
               stream: _fireStore.collection('messages').snapshots(),
               builder: (context, snapshot) {
-                if(!snapshot.hasData) {
-                  return const  Center(child: CircularProgressIndicator());
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 //AsyncSnapshot -> QuerySnapshot -> List of documents
                 final documents = snapshot.data!.docs;
                 List<Text> messageWidgets = [];
-                for(var doc in documents) {
-                  messageWidgets.add(
-                    Text('${doc['text']} from ${doc['sender']}')
-                  );
+                for (var doc in documents) {
+                  messageWidgets.add(Text(
+                    '${doc['text']} from ${doc['sender']}',
+                  ));
                 }
 
-                return Column(children: messageWidgets);
+                return Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                    children: messageWidgets,
+                  ),
+                );
               },
             ),
             Container(
