@@ -1,3 +1,4 @@
+import 'package:chatter/components/message_bubble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chatter/constants.dart';
@@ -74,16 +75,18 @@ class _ChatScreenState extends State<ChatScreen> {
 
                 //AsyncSnapshot -> QuerySnapshot -> List of documents
                 final documents = snapshot.data!.docs;
-                List<Text> messageWidgets = [];
+                List<MessageBubble> messageWidgets = [];
                 for (var doc in documents) {
-                  messageWidgets.add(Text(
-                    '${doc['text']} from ${doc['sender']}',
+                  messageWidgets.add(MessageBubble(
+                    sender: doc['sender'],
+                    text: doc['text'],
                   ));
                 }
 
                 return Expanded(
                   child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 20.0),
                     children: messageWidgets,
                   ),
                 );
