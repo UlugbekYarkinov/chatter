@@ -1,4 +1,5 @@
 import 'package:chatter/components/message_bubble.dart';
+import 'package:chatter/components/messages_stream.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chatter/constants.dart';
@@ -37,14 +38,6 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void messagesStream() async {
-    await for (var snapshot in _fireStore.collection('messages').snapshots()) {
-      for (var message in snapshot.docs) {
-        print(message.data());
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,32 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            StreamBuilder(
-              stream: _fireStore.collection('messages').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                //AsyncSnapshot -> QuerySnapshot -> List of documents
-                final documents = snapshot.data!.docs;
-                List<MessageBubble> messageWidgets = [];
-                for (var doc in documents) {
-                  messageWidgets.add(MessageBubble(
-                    sender: doc['sender'],
-                    text: doc['text'],
-                  ));
-                }
-
-                return Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0, vertical: 20.0),
-                    children: messageWidgets,
-                  ),
-                );
-              },
-            ),
+            MessagesStream(_fireStore),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
