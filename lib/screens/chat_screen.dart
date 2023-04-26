@@ -1,4 +1,3 @@
-import 'package:chatter/components/message_bubble.dart';
 import 'package:chatter/components/messages_stream.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final messageTextFieldController = TextEditingController();
   final _fireStore = FirebaseFirestore.instance;
   late String messageText;
   final _auth = FirebaseAuth.instance;
@@ -67,6 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: messageTextFieldController,
                       onChanged: (value) {
                         messageText = value;
                       },
@@ -75,6 +76,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   TextButton(
                     onPressed: () {
+                      messageTextFieldController.clear();
                       _fireStore.collection('messages').add({
                         'sender': loggedInUser.email,
                         'text': messageText,
