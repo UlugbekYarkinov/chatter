@@ -32,6 +32,7 @@ class MessagesStream extends StatelessWidget {
             sender: doc['sender'],
             text: doc['text'],
             isMe: loggedInUser.email == doc['sender'],
+            time: doc['ts'],
           ));
         }
 
